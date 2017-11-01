@@ -23,6 +23,7 @@ services:
     ports:
       - "5000:5000"
       - "5044:5044"
+      - "514:5514/udp"
     environment:
       LS_JAVA_OPTS: "-Xmx256m -Xms256m"
     networks:
