@@ -12,7 +12,8 @@ ARG pfsense_grok_uri=https://gist.githubusercontent.com/elijahpaul/f5f32d4e914dc
 RUN \
   mkdir -p /opt/logstash/patterns && \
   curl -sS $pfsense_grok_uri | \
+    sed '/^LOG_DATA/ i\\IFACE \\b[._a-zA-Z0-9]+\\b\n' | \
     sed 's/,(%{INT:sub_rule}),/,(%{INT:sub_rule})?,/' | \
-    sed 's/,(%{WORD:iface}),/,(?<iface>\\b[._a-zA-Z0-9]+\\b),/' | \
+    sed 's/,(%{WORD:iface}),/,(%{IFACE:iface}),/' | \
     sed 's/%{BASE16NUM:tos}),,(%{INT:ttl})/%{BASE16NUM:tos}),(%{WORD:ecn})?,(%{INT:ttl})/' \
     > /opt/logstash/patterns/pfsense.grok
