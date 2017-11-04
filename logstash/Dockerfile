@@ -16,5 +16,7 @@ RUN \
     sed '/^LOG_DATA/ i\\IFACE \\b[._a-zA-Z0-9]+\\b\n' | \
     sed 's/,(%{INT:sub_rule}),/,(%{INT:sub_rule})?,/' | \
     sed 's/,(%{WORD:iface}),/,(%{IFACE:iface}),/' | \
+    ( cat - ; echo ; echo "OTHER_PROTOCOLS_DATA (datalength=%{INT:data_length})" ) | \
+    sed 's/|%{ICMP_DATA})/|%{ICMP_DATA}|%{OTHER_PROTOCOLS_DATA})/' | \
     sed 's/%{BASE16NUM:tos}),,(%{INT:ttl})/%{BASE16NUM:tos}),(%{WORD:ecn})?,(%{INT:ttl})/' \
     > /opt/logstash/patterns/pfsense.grok
